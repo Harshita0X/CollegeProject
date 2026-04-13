@@ -1,0 +1,748 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+// ── Intersection Observer hook ─────────────────────────────────────────────
+function useReveal(threshold = 0.12) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
+// ── Animated counter ───────────────────────────────────────────────────────
+function Counter({ target, suffix = '' }) {
+  const [count, setCount] = useState(0);
+  const [ref, visible] = useReveal(0.3);
+  useEffect(() => {
+    if (!visible) return;
+    let start = 0;
+    const end = parseInt(target);
+    const step = Math.ceil(end / (1400 / 16));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= end) { setCount(end); clearInterval(timer); }
+      else setCount(start);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [visible, target]);
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+export default function Home() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [featRef, featVisible] = useReveal(0.08);
+  const [aboutRef, aboutVisible] = useReveal(0.08);
+  const [stepsRef, stepsVisible] = useReveal(0.08);
+  const [ctaRef, ctaVisible] = useReveal(0.1);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeroLoaded(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <main>
+      <style>{`
+        /* ── Original fonts preserved ── */
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+        :root {
+          --primary:        #000c1c;
+          --primary-fixed:  #d1e4ff;
+          --secondary:      #b52040;
+          --on-surface:     #1a1c1c;
+          --on-surface-var: #43474d;
+          --outline:        #73777e;
+          --outline-var:    #c3c6ce;
+          --surface:        #f9f9f9;
+          --surface-low:    #f3f3f3;
+          --surface-lowest: #ffffff;
+          --surface-high:   #e8e8e8;
+          --surface-highest:#e2e2e2;
+        }
+
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+          vertical-align: middle;
+        }
+
+        /* ── HERO ── */
+        .hero {
+          position: relative;
+          height: 100svh; min-height: 620px;
+          display: flex; align-items: center;
+          overflow: hidden;
+        }
+        .hero-bg {
+          position: absolute; inset: 0;
+          transform: scale(1.07);
+          transition: transform 7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .hero-bg.loaded { transform: scale(1); }
+        .hero-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(110deg, rgba(0,12,28,0.78) 45%, rgba(0,12,28,0.30) 100%);
+        }
+
+        .hero-inner {
+          position: relative; z-index: 10;
+          width: 100%;
+          padding-left: clamp(20px, 4vw, 40px);
+          max-width: 1440px; margin-left: 200px;
+          display: grid;
+          grid-template-columns: 1fr 300px;
+          align-items: flex-end;
+          gap: 40px;
+        }
+
+        .hero-text { max-width: 700px; padding-bottom: clamp(40px, 6vh, 80px); }
+
+        .hero-eyebrow {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(0.6rem, 1vw, 0.72rem);
+          font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+          color: rgba(255,255,255,0.55);
+          display: inline-flex; align-items: center; gap: 12px;
+          margin-bottom: clamp(14px, 2.5vw, 22px);
+          opacity: 0; transform: translateY(12px);
+          transition: opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease;
+        }
+        .hero-eyebrow.show { opacity: 1; transform: translateY(0); }
+        .hero-eyebrow::before {
+          content: ''; width: 28px; height: 1px;
+          background: rgba(255,255,255,0.4); display: block;
+        }
+
+        .hero-h1 {
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: clamp(3.2rem, 8vw, 7rem);
+          font-weight: 700; line-height: 0.93; letter-spacing: -0.02em;
+          color: #fff;
+          opacity: 0; transform: translateY(28px);
+          transition: opacity 0.85s 0.22s ease, transform 0.85s 0.22s ease;
+        }
+        .hero-h1.show { opacity: 1; transform: translateY(0); }
+
+        .hero-platform {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(1.1rem, 2.5vw, 2rem);
+          font-weight: 800; letter-spacing: -0.01em;
+          color: #FFB690;
+          margin-top: clamp(8px, 1.2vw, 14px);
+          opacity: 0; transform: translateY(16px);
+          transition: opacity 0.7s 0.38s ease, transform 0.7s 0.38s ease;
+        }
+        .hero-platform.show { opacity: 1; transform: translateY(0); }
+
+        .hero-sub {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.875rem, 1.5vw, 1.05rem);
+          font-weight: 400; line-height: 1.72; color: rgba(255,255,255,0.7);
+          max-width: 500px; margin-top: clamp(16px, 2vw, 22px);
+          opacity: 0; transform: translateY(12px);
+          transition: opacity 0.7s 0.52s ease, transform 0.7s 0.52s ease;
+        }
+        .hero-sub.show { opacity: 1; transform: translateY(0); }
+
+        .hero-btns {
+          display: flex; flex-wrap: wrap; gap: 12px;
+          margin-top: clamp(24px, 3.5vw, 40px);
+          opacity: 0; transform: translateY(10px);
+          transition: opacity 0.7s 0.65s ease, transform 0.7s 0.65s ease;
+        }
+        .hero-btns.show { opacity: 1; transform: translateY(0); }
+
+        .btn-white {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: #fff; color: var(--primary);
+          padding: clamp(12px, 1.4vw, 15px) clamp(22px, 2.8vw, 32px);
+          border-radius: 6px; font-family: 'Manrope', sans-serif;
+          font-size: clamp(0.8rem, 1.1vw, 0.875rem); font-weight: 700;
+          letter-spacing: 0.02em; text-decoration: none;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .btn-white:hover { background: var(--primary-fixed); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+        .btn-white:active { transform: scale(0.97); }
+
+        .btn-glass {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.88);
+          padding: clamp(12px, 1.4vw, 15px) clamp(22px, 2.8vw, 32px);
+          border-radius: 6px; font-family: 'Manrope', sans-serif;
+          font-size: clamp(0.8rem, 1.1vw, 0.875rem); font-weight: 700;
+          border: 1px solid rgba(255,255,255,0.2); text-decoration: none;
+          backdrop-filter: blur(10px);
+          transition: background 0.2s, transform 0.15s;
+        }
+        .btn-glass:hover { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
+
+        .hero-badge {
+          position: relative; z-index: 10;
+          background: rgba(255,255,255,0.08);
+          backdrop-filter: blur(18px);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-left: 3px solid #FFB690;
+          padding: clamp(20px, 2.5vw, 28px);
+          border-radius: 14px;
+          align-self: flex-end;
+          margin-bottom: clamp(40px, 6vh, 80px);
+          opacity: 0; transform: translateX(20px);
+          transition: opacity 0.8s 0.75s ease, transform 0.8s 0.75s ease;
+        }
+        .hero-badge.show { opacity: 1; transform: translateX(0); }
+        .hero-badge-label {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
+          color: rgba(255,255,255,0.45); font-weight: 700; margin-bottom: 8px;
+        }
+        .hero-badge h3 {
+          font-family: Georgia, serif;
+          font-size: clamp(1.2rem, 2vw, 1.55rem);
+          font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 8px;
+        }
+        .hero-badge p {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.5;
+        }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+          background: var(--primary);
+          padding: clamp(20px, 2.8vw, 30px) clamp(24px, 6vw, 128px);
+        }
+        .stats-grid {
+          max-width: 1440px; margin: 0 auto;
+          display: grid; grid-template-columns: repeat(4, 1fr);
+        }
+        .stat-cell {
+          padding: clamp(10px, 1.5vw, 16px) clamp(16px, 2vw, 28px);
+          border-right: 1px solid rgba(255,255,255,0.08);
+        }
+        .stat-cell:last-child { border-right: none; }
+        .stat-num {
+          font-family: Georgia, serif;
+          font-size: clamp(1.8rem, 3vw, 2.6rem);
+          font-weight: 700; color: #FFB690; line-height: 1;
+        }
+        .stat-lbl {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(0.6rem, 0.9vw, 0.68rem);
+          letter-spacing: 0.18em; text-transform: uppercase;
+          color: rgba(255,255,255,0.38); font-weight: 600;
+          margin-top: 5px;
+        }
+
+        /* ── FEATURES ── */
+        .features-section {
+          background: var(--surface-low);
+          padding: clamp(56px, 9vw, 112px) clamp(24px, 6vw, 128px);
+        }
+        .features-inner { max-width: 1440px; margin: 0 auto; }
+        .feat-head {
+          display: flex; justify-content: space-between; align-items: flex-end;
+          margin-bottom: clamp(36px, 5vw, 60px); gap: 32px; flex-wrap: wrap;
+        }
+        .sect-eyebrow {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.66rem; font-weight: 700; letter-spacing: 0.28em;
+          text-transform: uppercase; color: var(--secondary);
+          display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        }
+        .sect-eyebrow::after { content: ''; flex: 0 0 24px; height: 1px; background: var(--secondary); }
+        .feat-head-h2 {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(2rem, 4.5vw, 3.8rem);
+          font-weight: 800; color: #001e40; line-height: 1.08;
+          letter-spacing: -0.02em;
+        }
+        .feat-head-p {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.875rem, 1.4vw, 1rem);
+          color: #5a5f67; max-width: 400px; line-height: 1.7;
+        }
+
+        .bento {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: clamp(10px, 1.2vw, 18px);
+        }
+        .bento-card {
+          background: var(--surface-lowest);
+          border: 1px solid rgba(0,0,0,0.06);
+          border-radius: clamp(14px, 1.5vw, 20px);
+          padding: clamp(24px, 3vw, 40px);
+          display: flex; flex-direction: column; justify-content: space-between;
+          min-height: clamp(240px, 26vw, 360px);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+          overflow: hidden;
+        }
+        .bento-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+        .bento-card.span2 { grid-column: span 2; }
+        .bento-card.dark-card { background: var(--primary); }
+        .bento-card.red-card  { background: var(--secondary); }
+        .bento-card.img-card  { padding: 0; }
+
+        .bento-icon { font-size: clamp(2rem, 2.8vw, 2.6rem); margin-bottom: clamp(16px, 2vw, 28px); color: var(--secondary); }
+        .dark-card .bento-icon { color: #adc9ee; }
+        .red-card  .bento-icon { color: rgba(255,255,255,0.8); }
+
+        .bento-num {
+          font-family: Georgia, serif;
+          font-size: clamp(3.5rem, 6vw, 6rem);
+          font-weight: 700; line-height: 1; color: var(--primary); letter-spacing: -0.04em;
+        }
+        .dark-card .bento-num { color: #adc9ee; }
+
+        .bento-title {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(1.1rem, 2vw, 1.6rem);
+          font-weight: 800; line-height: 1.15; color: var(--primary); margin-bottom: 6px;
+        }
+        .dark-card .bento-title, .red-card .bento-title { color: #fff; }
+
+        .bento-meta {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.65rem; letter-spacing: 0.2em;
+          text-transform: uppercase; font-weight: 700;
+          color: var(--on-surface-var); margin-top: 4px;
+        }
+        .dark-card .bento-meta { color: rgba(255,255,255,0.4); }
+        .red-card  .bento-meta { color: rgba(255,255,255,0.65); }
+
+        .bento-desc {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.8rem, 1.1vw, 0.875rem);
+          line-height: 1.65; color: var(--outline); margin-top: 10px;
+        }
+        .dark-card .bento-desc { color: rgba(255,255,255,0.45); }
+        .red-card  .bento-desc { color: rgba(255,255,255,0.7); }
+
+        .bento-img-wrap { position: relative; width: 100%; height: 100%; min-height: 240px; }
+        .bento-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .bento-img-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(0,12,28,0.88) 35%, transparent 100%);
+          padding: clamp(20px, 2.5vw, 32px);
+          display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .bento-img-overlay .bento-title { color: #fff; }
+        .bento-img-overlay .bento-desc  { color: rgba(255,255,255,0.6); }
+
+        /* ── ABOUT ── */
+        .about-section {
+          background: #fff;
+          padding: clamp(56px, 9vw, 112px) clamp(24px, 6vw, 128px);
+          overflow: hidden;
+        }
+        .about-inner {
+          max-width: 1440px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: clamp(48px, 7vw, 100px); align-items: center;
+        }
+        .about-eyebrow {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.66rem; font-weight: 700; letter-spacing: 0.28em;
+          text-transform: uppercase; color: #921c1c;
+          display: block; margin-bottom: 14px;
+        }
+        .about-h2 {
+          font-family: Georgia, serif;
+          font-size: clamp(2.2rem, 5vw, 4.2rem);
+          font-weight: 700; color: #001e40; line-height: 1.06; letter-spacing: -0.02em;
+        }
+        .about-p {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.875rem, 1.4vw, 1rem);
+          color: #4a4e56; line-height: 1.76; margin-top: 18px; max-width: 480px;
+        }
+        .checklist { margin-top: 30px; display: flex; flex-direction: column; gap: 13px; }
+        .check-item {
+          display: flex; align-items: center; gap: 13px;
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+          font-weight: 500; color: #2d323a;
+        }
+        .check-icon { color: #15803d; font-size: 22px; flex-shrink: 0;
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+        .specs-card {
+          background: #fcfaf7; border: 1px solid #e9e4df;
+          border-radius: clamp(18px, 2vw, 28px);
+          padding: clamp(32px, 4vw, 52px);
+          position: relative; overflow: hidden;
+        }
+        .specs-card::before {
+          content: ''; position: absolute;
+          top: -48px; right: -48px; width: 180px; height: 180px;
+          background: radial-gradient(circle, rgba(181,32,64,0.08), transparent 70%);
+          border-radius: 50%;
+        }
+        .specs-h3 {
+          font-family: Georgia, serif;
+          font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+          font-weight: 700; color: #001e40; margin-bottom: clamp(20px, 3vw, 36px);
+        }
+        .specs-row {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: clamp(12px, 1.6vw, 18px) 0;
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+        }
+        .specs-row:last-child { border-bottom: none; }
+        .specs-key { font-family: 'Inter', sans-serif; font-size: clamp(0.8rem, 1.1vw, 0.9rem); color: #5a5f67; }
+        .specs-val { font-family: 'Manrope', sans-serif; font-size: clamp(0.8rem, 1.1vw, 0.9rem); font-weight: 700; color: #001e40; }
+
+        /* ── STEPS ── */
+        .steps-section {
+          background: #f2f4f6;
+          padding: clamp(64px, 10vw, 120px) clamp(24px, 6vw, 128px);
+        }
+        .steps-inner { max-width: 1440px; margin: 0 auto; }
+        .steps-head { text-align: center; margin-bottom: clamp(48px, 7vw, 80px); }
+        .steps-eyebrow {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.66rem; font-weight: 700; letter-spacing: 0.28em;
+          text-transform: uppercase; color: var(--outline);
+          display: block; margin-bottom: 14px;
+        }
+        .steps-h2 {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(2.2rem, 5vw, 3.8rem);
+          font-weight: 800; color: var(--primary); letter-spacing: -0.02em;
+        }
+        .steps-grid {
+          display: grid; grid-template-columns: repeat(3, 1fr);
+          gap: clamp(20px, 3vw, 48px); position: relative;
+        }
+        .steps-grid::before {
+          content: '';
+          position: absolute; top: 52px;
+          left: calc(16.5% + 20px); right: calc(16.5% + 20px);
+          height: 1px;
+          background: linear-gradient(to right, var(--secondary), rgba(181,32,64,0.15), var(--secondary));
+          pointer-events: none;
+        }
+        .step-card {
+          padding: clamp(24px, 3vw, 40px);
+          border-radius: clamp(14px, 1.5vw, 20px);
+          transition: background 0.25s, transform 0.25s;
+        }
+        .step-card:hover { background: rgba(255,255,255,0.75); transform: translateY(-4px); }
+        .step-big-num {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(4rem, 7vw, 6rem); font-weight: 800; line-height: 1;
+          color: var(--surface-highest); letter-spacing: -0.04em;
+          margin-bottom: clamp(14px, 2vw, 20px);
+          transition: color 0.25s;
+        }
+        .step-card:hover .step-big-num { color: var(--primary-fixed); }
+        .step-title {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(1rem, 1.8vw, 1.25rem);
+          font-weight: 800; color: var(--primary); margin-bottom: 12px;
+        }
+        .step-desc {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+          color: var(--on-surface-var); line-height: 1.7;
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+          padding: clamp(40px, 6vw, 80px) clamp(24px, 6vw, 128px)
+                   clamp(56px, 9vw, 112px);
+        }
+        .cta-inner {
+          max-width: 1440px; margin: 0 auto;
+          background: var(--primary);
+          border-radius: clamp(16px, 2vw, 24px);
+          padding: clamp(48px, 7vw, 96px) clamp(40px, 6vw, 80px);
+          text-align: center; position: relative; overflow: hidden;
+        }
+        .cta-inner::before {
+          content: ''; position: absolute;
+          top: -80px; left: 50%; transform: translateX(-50%);
+          width: 600px; height: 320px;
+          background: radial-gradient(ellipse, rgba(181,32,64,0.2), transparent 70%);
+          pointer-events: none;
+        }
+        .cta-bg { position: absolute; inset: 0; opacity: 0.07; }
+        .cta-bg img { width: 100%; height: 100%; object-fit: cover; }
+        .cta-body { position: relative; z-index: 10; }
+        .cta-h2 {
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(2rem, 5.5vw, 4.5rem);
+          font-weight: 800; color: #fff;
+          letter-spacing: -0.025em; line-height: 1.05; margin-bottom: 18px;
+        }
+        .cta-sub {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.875rem, 1.4vw, 1rem);
+          color: rgba(209,228,255,0.7); max-width: 520px;
+          margin: 0 auto clamp(28px, 4vw, 44px); line-height: 1.7;
+        }
+        .btn-cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: var(--surface-lowest); color: var(--primary);
+          padding: clamp(14px, 1.6vw, 18px) clamp(28px, 4vw, 48px);
+          border-radius: 6px; font-family: 'Manrope', sans-serif;
+          font-size: clamp(0.875rem, 1.2vw, 1rem); font-weight: 800;
+          text-decoration: none;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+          transition: background 0.2s, transform 0.15s;
+        }
+        .btn-cta:hover { background: var(--primary-fixed); transform: translateY(-2px); }
+        .btn-cta:active { transform: scale(0.97); }
+
+        /* ── SCROLL REVEALS ── */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal.in { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.08s; }
+        .delay-2 { transition-delay: 0.16s; }
+        .delay-3 { transition-delay: 0.24s; }
+        .delay-4 { transition-delay: 0.32s; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+          .hero-inner { grid-template-columns: 1fr; }
+          .hero-badge { display: none; }
+          .bento { grid-template-columns: repeat(2, 1fr); }
+          .bento-card.span2 { grid-column: span 2; }
+          .about-inner { grid-template-columns: 1fr; }
+          .steps-grid { grid-template-columns: 1fr; }
+          .steps-grid::before { display: none; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .bento { grid-template-columns: 1fr; }
+          .bento-card.span2 { grid-column: span 1; }
+          .stat-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+          .stat-cell:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+        }
+      `}</style>
+
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className={`hero-bg ${heroLoaded ? 'loaded' : ''}`}>
+          <img
+            src="https://lh3.googleusercontent.com/aida/ADBb0uipJS-QekDk_XkfmZwEhz-iAS_vpX94LTNx9ovTEtMfFAYElrmTTh_Wl3vUe9nI-IohsHoA-6kwmw5juwlMD7cZgdEF7QKQIhH2vfx6HdVV2rxjtFqC0MoQS06vHO8kNwnSKyXSVcnbgwxzQYgJGt1FFnIRS_083-uDC9hqwevHZ-KdOMcFZlpXKX-Y9A6hxDx4aK3grB4XUDQpjLTBMTTwUExkKFHoAEDKZF6Er0yv-8-KcU4Bjge_q4Qr99mVVV-h0BRIFmBzGQ"
+            alt="MAIT Campus"
+          />
+        </div>
+        <div className="hero-overlay" />
+
+        <div className="hero-inner">
+          <div className="hero-text">
+            <div className={`hero-eyebrow ${heroLoaded ? 'show' : ''}`}>
+              Maharaja Agrasen Institute of Technology
+            </div>
+            <h1 className={`hero-h1 ${heroLoaded ? 'show' : ''}`}>
+              The Mini <br />Auditorium
+            </h1>
+            <h2 className={`hero-platform ${heroLoaded ? 'show' : ''}`}>
+              Booking Platform
+            </h2>
+            <p className={`hero-sub ${heroLoaded ? 'show' : ''}`}>
+              A curated space designed for academic discourse, cultural exhibitions,
+              and prestigious institutional gatherings. Experience architectural
+              sophistication at the heart of MAIT.
+            </p>
+            <div className={`hero-btns ${heroLoaded ? 'show' : ''}`}>
+              <Link to="/schedule" className="btn-white">Book Now</Link>
+              <Link to="/schedule" className="btn-glass">View Schedule</Link>
+            </div>
+          </div>
+
+          <div className={`hero-badge ${heroLoaded ? 'show' : ''}`}>
+            <div className="hero-badge-label">Featured Event</div>
+            <h3>Army Host</h3>
+            <p>Hosting the future of engineering in a space built for innovation.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS ── */}
+      <div className="stats-strip">
+        <div className="stats-grid">
+          {[
+            { n: 250, s: '+', l: 'Seating Capacity' },
+            { n: 48, s: 'hr', l: 'Approval Turnaround' },
+            { n: 120, s: '+', l: 'Events Hosted' },
+            { n: 4, s: 'K', l: 'Projection Quality' },
+          ].map((item, i) => (
+            <div className="stat-cell" key={i}>
+              <div className="stat-num"><Counter target={item.n} suffix={item.s} /></div>
+              <div className="stat-lbl">{item.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── FEATURES ── */}
+      <section className="features-section" ref={featRef}>
+        <div className="features-inner">
+          <div className="feat-head">
+            <div>
+              <div className="sect-eyebrow">Facility Specifications</div>
+              <h2 className="feat-head-h2">
+                Precision Engineering<br />for Every Performance
+              </h2>
+            </div>
+            <p className={`feat-head-p reveal ${featVisible ? 'in delay-2' : ''}`}>
+              Equipped with industry-leading technology to ensure your seminars,
+              workshops, and presentations resonate with clarity.
+            </p>
+          </div>
+
+          <div className="bento">
+            <div className={`bento-card span2 dark-card reveal ${featVisible ? 'in' : ''}`}>
+              <span className="material-symbols-outlined bento-icon">groups</span>
+              <div>
+                <div className="bento-num"><Counter target={250} suffix="+" /></div>
+                <div className="bento-meta">Premium Seating Capacity</div>
+                <p className="bento-desc">Ergonomically designed deep-blue cushioned seating with integrated desk surfaces for comfort and utility.</p>
+              </div>
+            </div>
+
+            <div className={`bento-card red-card reveal ${featVisible ? 'in delay-1' : ''}`}>
+              <span className="material-symbols-outlined bento-icon">surround_sound</span>
+              <div>
+                <div className="bento-title">Dolby Pro Audio</div>
+                <div className="bento-meta">High Fidelity Sound</div>
+              </div>
+            </div>
+
+            <div className={`bento-card reveal ${featVisible ? 'in delay-2' : ''}`}>
+              <span className="material-symbols-outlined bento-icon">ac_unit</span>
+              <div>
+                <div className="bento-title">Climate Control</div>
+                <div className="bento-meta">Centralized AC System</div>
+              </div>
+            </div>
+
+            <div className={`bento-card reveal ${featVisible ? 'in delay-1' : ''}`}>
+              <span className="material-symbols-outlined bento-icon">videocam</span>
+              <div>
+                <div className="bento-title">4K Projection</div>
+                <div className="bento-meta">Laser Visuals</div>
+              </div>
+            </div>
+
+            <div className={`bento-card span2 img-card reveal ${featVisible ? 'in delay-2' : ''}`}>
+              <div className="bento-img-wrap">
+                <img
+                  src="https://lh3.googleusercontent.com/aida/ADBb0uh0kQzOJ7K5PTWFDo3oSzvqoGoiP9Lf6GpwLUA8WB4AFJtGbYIJ7ZCHNRBjQpJnXHSByyjIJdDpv45KTd8q4MJwh_Ved7c62ka7dW-6shCFTGkJohkwqYxO_4ZbGYM3fwgL8OdErbgde0UOTCxJ00w0qEqdvJicV09NaH5seR27AV65V2JpZWxI6wXjMxwV4YJhiz5CT9aAM-cUGiHSnkZSWHYi6xhWMrHRg20XA4dHrJzHqVvBPaC_-mQMCu9cTMq8ZHwjUt8xxw"
+                  alt="MAIT Auditorium Interior"
+                />
+                <div className="bento-img-overlay">
+                  <div className="bento-title">Intelligent Lighting</div>
+                  <p className="bento-desc">Programmable DMX lighting systems for versatile event atmospheres.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ── */}
+      <section className="about-section" ref={aboutRef}>
+        <div className="about-inner">
+          <div>
+            <div className={`reveal ${aboutVisible ? 'in' : ''}`}>
+              <span className="about-eyebrow">About the Platform</span>
+              <h2 className="about-h2">Excellence in Event<br />Management</h2>
+              <p className="about-p">
+                Our auditorium booking platform represents the convergence of institutional excellence
+                and technological innovation. Designed specifically for academic and professional
+                environments, we provide a comprehensive solution that ensures seamless event
+                coordination and optimal facility utilization.
+              </p>
+            </div>
+            <ul className={`checklist reveal ${aboutVisible ? 'in delay-2' : ''}`}>
+              {[
+                'Professional-grade security and reliability',
+                'Intuitive interface for all user levels',
+                'Comprehensive event management tools',
+                'Real-time availability and instant confirmations',
+              ].map((txt, i) => (
+                <li className="check-item" key={i}>
+                  <span className="material-symbols-outlined check-icon">check_circle</span>
+                  {txt}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={`specs-card reveal ${aboutVisible ? 'in delay-1' : ''}`}>
+            <h3 className="specs-h3">Platform Specifications</h3>
+            {[
+              { k: 'Capacity Range', v: '100 – 400 People' },
+              { k: 'Availability', v: '24/7 Online Access' },
+              { k: 'Notifications', v: 'Email & System Alerts' },
+              { k: 'Approval SLA', v: 'Within 48 Hours' },
+              { k: 'AV Support', v: '4K · Dolby Audio · DMX' },
+            ].map((row, i) => (
+              <div className="specs-row" key={i}>
+                <span className="specs-key">{row.k}</span>
+                <span className="specs-val">{row.v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BOOKING STEPS ── */}
+      <section className="steps-section" ref={stepsRef}>
+        <div className="steps-inner">
+          <div className="steps-head">
+            <span className="steps-eyebrow">Seamless Orchestration</span>
+            <h2 className="steps-h2">The Booking Journey</h2>
+          </div>
+          <div className="steps-grid">
+            {[
+              { n: '01', title: 'Availability Check', desc: 'Browse our real-time digital calendar to identify open slots. Filter by event type and duration to ensure the perfect fit for your schedule.' },
+              { n: '02', title: 'Institutional Approval', desc: 'Submit your event proposal digitally. Our administrative curators review requests within 48 hours to maintain high academic standards.' },
+              { n: '03', title: 'Confirmation', desc: 'Once approved, receive your digital access pass and technical rider confirmation. Our support team will coordinate your AV requirements.' },
+            ].map((s, i) => (
+              <div key={i} className={`step-card reveal ${stepsVisible ? `in delay-${i + 1}` : ''}`}>
+                <div className="step-big-num">{s.n}</div>
+                <h3 className="step-title">{s.title}</h3>
+                <p className="step-desc">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="cta-section" ref={ctaRef}>
+        <div className="cta-inner">
+          <div className="cta-bg">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5M7XXXoW1VmS3Sfp3Z43ej65vfz5hgXrNu8RVtwsMOkY76_-ifzOQYzOlZzBdESyKnATQErmoWfdIdMqjVd8XDUaPB_tEU9AStbsgVD3XcEQtZKWZswi932H-Y_3j429xQQjLrbLFtbUwGbwFW8P3DafB4Y2Xi0_qmfz2WHF860dwZKRSHqDjJlJfKzo33cQqYYVFufzbXHX6o-vEoVL9oNIwwpccT7EVO8-HVdMSCtLd5W7iF8FUIFelwPF8A2rHl8Ey2ND0k3c"
+              alt=""
+            />
+          </div>
+          <div className={`cta-body reveal ${ctaVisible ? 'in' : ''}`}>
+            <h2 className="cta-h2">Ready to curate your event?</h2>
+            <p className="cta-sub">
+              Join the roster of prestigious lectures and events hosted at
+              Maharaja Agrasen Institute of Technology.
+            </p>
+            <Link to="/schedule" className="btn-cta">Begin Reservation</Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
