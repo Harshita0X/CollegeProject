@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../store/useAuthStore';
 
 export default function Login() {
-  const [role, setRole] = useState('student'); // 'student' or 'faculty'
-  const [username, setUsername] = useState('');
+  const [role, setRole] = useState('student');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { login, isLoading, error, clearError } = useAuthStore();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate login
-    console.log('Login attempt:', { role, username, password });
-    // Redirect to home for now (or dashboard if it exists)
-    navigate('/');
+
+    const result = await login({ email, password, role });
+    if (result.success) {
+      navigate('/dashboard');
+    }
+    
   };
 
   return (
@@ -36,11 +40,10 @@ export default function Login() {
             <p className="font-body text-slate-500 text-sm font-medium">Access your personalized dashboard at Maharaja Agrasen Institute of Technology</p>
           </header>
 
-          {/* Role Selector */}
           <div className="mb-6">
             <label className="block text-center text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#74777f] mb-2">Select Your Role</label>
             <div className="grid grid-cols-2 p-1.5 bg-[#f2f4f6] rounded-xl border border-[#c4c6cf]/30">
-              <button 
+              <button
                 type="button"
                 onClick={() => setRole('student')}
                 className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold transition-all ${role === 'student' ? 'bg-white shadow-sm text-[#001e40]' : 'text-slate-500'}`}
@@ -48,7 +51,7 @@ export default function Login() {
                 <span className="material-symbols-outlined text-lg">school</span>
                 Student
               </button>
-              <button 
+              <button
                 type="button"
                 onClick={() => setRole('faculty')}
                 className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold transition-all ${role === 'faculty' ? 'bg-white shadow-sm text-[#001e40]' : 'text-slate-500'}`}
@@ -61,15 +64,18 @@ export default function Login() {
 
           <form className="space-y-4" onSubmit={handleLogin}>
             <div className="space-y-2">
-              <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[#001e40]/70 mb-1">ID / Username</label>
+              <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[#001e40]/70 mb-1">Email</label>
               <div className="relative group">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#74777f]/60 text-lg transition-colors group-focus-within:text-[#001e40]">person</span>
-                <input 
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-white border border-[#c4c6cf]/50 rounded-xl py-3 pl-12 pr-4 text-[#191c1e] placeholder:text-[#74777f]/40 focus:ring-2 focus:ring-[#001e40]/10 focus:border-[#001e40] transition-all outline-none" 
-                  placeholder={role === 'student' ? "e.g. 00114803121" : "e.g. jdoe_mait"}
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) clearError();
+                  }}
+                  className="w-full bg-white border border-[#c4c6cf]/50 rounded-xl py-3 pl-12 pr-4 text-[#191c1e] placeholder:text-[#74777f]/40 focus:ring-2 focus:ring-[#001e40]/10 focus:border-[#001e40] transition-all outline-none"
+                  placeholder="e.g. name@example.com"
                   required
                 />
               </div>
@@ -82,23 +88,33 @@ export default function Login() {
               </div>
               <div className="relative group">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#74777f]/60 text-lg transition-colors group-focus-within:text-[#001e40]">lock</span>
-                <input 
+                <input
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white border border-[#c4c6cf]/50 rounded-xl py-3 pl-12 pr-4 text-[#191c1e] placeholder:text-[#74777f]/40 focus:ring-2 focus:ring-[#001e40]/10 focus:border-[#001e40] transition-all outline-none" 
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) clearError();
+                  }}
+                  className="w-full bg-white border border-[#c4c6cf]/50 rounded-xl py-3 pl-12 pr-4 text-[#191c1e] placeholder:text-[#74777f]/40 focus:ring-2 focus:ring-[#001e40]/10 focus:border-[#001e40] transition-all outline-none"
                   placeholder="••••••••"
                   required
                 />
               </div>
             </div>
 
+            {error && (
+              <p className="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+
             <div className="pt-2">
-              <button 
+              <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full bg-[#001e40] text-white font-headline font-bold py-3 rounded-xl shadow-lg shadow-[#001e40]/10 hover:shadow-[#001e40]/20 hover:bg-[#000511] active:scale-[0.99] transition-all flex items-center justify-center gap-3"
               >
-                <span>Secure Sign In</span>
+                <span>{isLoading ? 'Signing in...' : 'Secure Sign In'}</span>
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </button>
             </div>
