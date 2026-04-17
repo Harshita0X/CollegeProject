@@ -7,7 +7,7 @@ dotenv.config();
 
 export const Signup = async (req, resp) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         // Verifying
 
@@ -42,10 +42,19 @@ export const Signup = async (req, resp) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
+        const normalizedRole = role?.toLowerCase?.() || 'student';
+        if (!['student', 'faculty'].includes(normalizedRole)) {
+            return resp.status(400).json({
+                success: false,
+                message: 'Invalid role selected for signup'
+            });
+        }
+
         const newUser = await User.create({
             name,
             email,
             password: hashedPassword,
+            role: normalizedRole,
         });
 
         generateToken(newUser._id, resp);
@@ -55,10 +64,11 @@ export const Signup = async (req, resp) => {
             success: true,
             message: 'Successfully created a new user',
             data: {
-                _id: updatedUser._id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                profilePic: updatedUser.profilePic,
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                profilePic: newUser.profilePic,
+                role: newUser.role,
             }
         });
 
@@ -74,7 +84,7 @@ export const Signup = async (req, resp) => {
 
 export const Login = async (req, resp) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
 
         if (!email || !password) {
             return resp.status(400).json({
@@ -103,6 +113,23 @@ export const Login = async (req, resp) => {
             });
         }
 
+        const normalizedRole = role?.toLowerCase?.();
+        if (normalizedRole && !['student', 'faculty'].includes(normalizedRole)) {
+            return resp.status(400).json({
+                success: false,
+                message: 'Invalid role provided'
+            });
+        }
+
+        const effectiveRole = findUser.role || (findUser.rollNo ? 'student' : 'faculty');
+
+        if (normalizedRole && effectiveRole !== normalizedRole) {
+            return resp.status(403).json({
+                success: false,
+                message: `This account is not registered as ${normalizedRole}`
+            });
+        }
+
         // Generating token
         generateToken(findUser._id, resp);
 
@@ -110,10 +137,11 @@ export const Login = async (req, resp) => {
             success: true,
             message: 'Successfully logged in the user',
             data: {
-                _id: updatedUser._id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                profilePic: updatedUser.profilePic,
+                _id: findUser._id,
+                name: findUser.name,
+                email: findUser.email,
+                profilePic: findUser.profilePic,
+                role: effectiveRole,
             }
         });
 

@@ -519,3 +519,7 @@
 @keyframes bpSpin {
   to { transform: rotate(360deg); }
 }
+
+.bp-spin {
+  animation: bpSpin 0.7s linear infinite;
+}

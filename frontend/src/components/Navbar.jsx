@@ -20,20 +20,20 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="hidden md:flex items-center gap-10 font-headline text-sm font-bold tracking-tight">
-          <Link 
-            className={`${isHome ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`} 
+          <Link
+            className={`${isHome ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`}
             to="/"
           >
             Home
           </Link>
-          <Link 
-            className={`${isSchedule ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`} 
+          <Link
+            className={`${isSchedule ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`}
             to="/schedule"
           >
             Schedule
           </Link>
-          <Link 
-            className={`${isLogin ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`} 
+          <Link
+            className={`${isLogin ? 'text-[#001e40] dark:text-[#ffffff] border-b-2 border-[#001e40] pb-1' : 'text-slate-500 hover:text-[#001e40] transition-colors'}`}
             to="/login"
           >
             Portal Login
