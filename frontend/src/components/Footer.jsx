@@ -51,7 +51,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-[10px] md:text-xs uppercase tracking-wider text-white/60 font-medium">
-            © Maharaja Agrasen Institute of Technology, New Delhi 1999-2025, Powered by MATES. Designed by Ansh Jain
+            © Maharaja Agrasen Institute of Technology, New Delhi 1999-2025, Powered by ITE Students
           </div>
           <div className="flex items-center gap-8 text-[10px] md:text-xs uppercase tracking-wider font-semibold">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
