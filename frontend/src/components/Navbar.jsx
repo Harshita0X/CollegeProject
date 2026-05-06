@@ -12,7 +12,6 @@ export default function Navbar() {
       <div className="flex justify-between items-center w-full px-8 h-20 max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
           <Link className="flex items-center gap-3" to="/">
-            <div className="w-10 h-10 bg-[#001e40] rounded flex items-center justify-center text-white font-black text-xl">M</div>
             <div className="flex flex-col">
               <span className="text-xl font-extrabold tracking-tighter text-[#001e40] dark:text-[#ffffff] leading-tight">MAIT</span>
               <span className="text-[0.6rem] font-bold uppercase tracking-widest text-[#74777f]">Institutional Portal</span>
@@ -43,9 +42,7 @@ export default function Navbar() {
           <button className="p-2 text-[#001e40] dark:text-white hover:bg-[#f2f4f6]/50 rounded-md transition-all">
             <span className="material-symbols-outlined">notifications</span>
           </button>
-          <button className="p-2 text-[#001e40] dark:text-white hover:bg-[#f2f4f6]/50 rounded-md transition-all">
-            <span className="material-symbols-outlined">account_circle</span>
-          </button>
+
         </div>
       </div>
     </nav>

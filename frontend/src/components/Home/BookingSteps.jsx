@@ -1,27 +1,56 @@
 import React from 'react';
+import './BookingStepsNew.css';
 
-const STEPS = [
-  { n: '01', title: 'Availability Check', desc: 'Browse our real-time digital calendar to identify open slots. Filter by event type and duration to ensure the perfect fit for your schedule.' },
-  { n: '02', title: 'Institutional Approval', desc: 'Submit your event proposal digitally. Our administrative curators review requests within 48 hours to maintain high academic standards.' },
-  { n: '03', title: 'Confirmation', desc: 'Once approved, receive your digital access pass and technical rider confirmation. Our support team will coordinate your AV requirements.' },
+const STEPS_LEFT = [
+  { icon: 'search', title: '1. Instant Search', desc: 'Check real-time availability for the Mini Auditorium in seconds.' },
+  { icon: 'task_alt', title: '2. Smart Approval', desc: 'Submit your request digitally. Our team reviews entries quickly.' },
+  { icon: 'receipt_long', title: '3. Easy Confirmation', desc: 'Get your digital confirmation and technical details immediately.' },
+];
+
+const STEPS_RIGHT = [
+  { icon: 'payments', title: '4. Secure Payments', desc: 'Complete venue booking payments securely through our portal.' },
+  { icon: 'settings', title: '5. Technical Setup', desc: 'Coordinate AV, lighting, and seating requirements beforehand.' },
+  { icon: 'celebration', title: '6. Event Execution', desc: 'Enjoy a seamless event experience with dedicated on-site support.' },
 ];
 
 export default function BookingSteps({ stepsRef, stepsVisible }) {
   return (
-    <section className="steps-section" ref={stepsRef}>
-      <div className="steps-inner">
-        <div className="steps-head">
-          <span className="steps-eyebrow">Seamless Orchestration</span>
-          <h2 className="steps-h2">The Booking Journey</h2>
+    <section className="booking-new-section" ref={stepsRef}>
+      <div className="booking-new-inner">
+        <div className="booking-new-head">
+          <div className={`reveal ${stepsVisible ? 'in' : ''}`}>
+            <h2 className="section-h2-bold text-center" style={{ width: '100%' }}>
+              <span className="text-fill" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', textTransform: 'none', letterSpacing: '-0.04em' }}>
+                Platform Booking Steps
+              </span>
+            </h2>
+          </div>
         </div>
-        <div className="steps-grid">
-          {STEPS.map((s, i) => (
-            <div key={i} className={`step-card reveal ${stepsVisible ? `in delay-${i + 1}` : ''}`}>
-              <div className="step-big-num">{s.n}</div>
-              <h3 className="step-title">{s.title}</h3>
-              <p className="step-desc">{s.desc}</p>
-            </div>
-          ))}
+        
+        <div className={`booking-layout reveal ${stepsVisible ? 'in delay-1' : ''}`}>
+          <div className="booking-col">
+            {STEPS_LEFT.map((step, i) => (
+              <div className="booking-step-item" key={i}>
+                <span className="material-symbols-outlined step-icon">{step.icon}</span>
+                <h3 className="step-title-new">{step.title}</h3>
+                <p className="step-desc-new">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="booking-center-col">
+            <img src="/maitaudi.png" alt="Platform usage" className="booking-center-img" />
+          </div>
+          
+          <div className="booking-col">
+            {STEPS_RIGHT.map((step, i) => (
+              <div className="booking-step-item" key={i}>
+                <span className="material-symbols-outlined step-icon">{step.icon}</span>
+                <h3 className="step-title-new">{step.title}</h3>
+                <p className="step-desc-new">{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
