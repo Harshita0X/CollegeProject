@@ -1,43 +1,78 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Hero({ heroLoaded }) {
+const IMAGES = [
+  'mait_pic.png',
+  'mait_pic_2.png',
+  'mait_pic_3.png'
+];
+
+const TYPING_TEXT = "Tailored for Your Events";
+
+export default function Hero() {
+  const [imgIndex, setImgIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isTypingDone, setIsTypingDone] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImgIndex((prev) => (prev + 1) % IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Typewriter part
+  useEffect(() => {
+
+    let currentIdx = 0;
+    const typingInterval = setInterval(() => {
+      if (currentIdx <= TYPING_TEXT.length) {
+        setDisplayText(TYPING_TEXT.slice(0, currentIdx));
+        currentIdx++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTypingDone(true);
+      }
+    }, 100);
+
+    return () => clearInterval(typingInterval);
+  }, []);
+
   return (
-    <section className="hero">
-      <div className={`hero-bg ${heroLoaded ? 'loaded' : ''}`}>
-        <img
-          src="https://lh3.googleusercontent.com/aida/ADBb0uipJS-QekDk_XkfmZwEhz-iAS_vpX94LTNx9ovTEtMfFAYElrmTTh_Wl3vUe9nI-IohsHoA-6kwmw5juwlMD7cZgdEF7QKQIhH2vfx6HdVV2rxjtFqC0MoQS06vHO8kNwnSKyXSVcnbgwxzQYgJGt1FFnIRS_083-uDC9hqwevHZ-KdOMcFZlpXKX-Y9A6hxDx4aK3grB4XUDQpjLTBMTTwUExkKFHoAEDKZF6Er0yv-8-KcU4Bjge_q4Qr99mVVV-h0BRIFmBzGQ"
-          alt="MAIT Campus"
-        />
-      </div>
-      <div className="hero-overlay" />
+    <section className="hero-modern">
+      <div className="hero-container">
+        {/* Stadium Image Vessel */}
+        <div className="hero-stadium-wrap show">
+          <div className="hero-stadium-vessel">
+            {IMAGES.map((src, index) => (
+              <img
+                key={src}
+                src={src}
+                alt={`MAIT Auditorium ${index + 1}`}
+                className={`hero-stadium-img parallax-bg ${index === imgIndex ? 'active' : ''}`}
+              />
+            ))}
+            <div className="hero-stadium-overlay" />
 
-      <div className="hero-inner">
-        <div className="hero-text">
-          <div className={`hero-eyebrow ${heroLoaded ? 'show' : ''}`}>
-            Maharaja Agrasen Institute of Technology
-          </div>
-          <h1 className={`hero-h1 ${heroLoaded ? 'show' : ''}`}>
-            The Mini <br />Auditorium
-          </h1>
-          <h2 className={`hero-platform ${heroLoaded ? 'show' : ''}`}>
-            Booking Platform
-          </h2>
-          <p className={`hero-sub ${heroLoaded ? 'show' : ''}`}>
-            A curated space designed for academic discourse, cultural exhibitions,
-            and prestigious institutional gatherings. Experience architectural
-            sophistication at the heart of MAIT.
-          </p>
-          <div className={`hero-btns ${heroLoaded ? 'show' : ''}`}>
-            <Link to="/schedule" className="btn-white">Book Now</Link>
-            <Link to="/schedule" className="btn-glass">View Schedule</Link>
-          </div>
-        </div>
+            {/* Overlay Content */}
+            <div className="hero-overlay-content">
+              <header className="hero-header">
+                <h1 className="hero-h1-bold show">
+                  <span className="h1-stroke">MINI</span> <br />
+                  <span className="h1-fill">AUDITORIUM</span>
+                </h1>
+                <p className="hero-typewriter-sub show">
+                  {displayText}
+                  {!isTypingDone && <span className="cursor">|</span>}
+                </p>
+              </header>
 
-        <div className={`hero-badge ${heroLoaded ? 'show' : ''}`}>
-          <div className="hero-badge-label">Featured Event</div>
-          <h3>Army Host</h3>
-          <p>Hosting the future of engineering in a space built for innovation.</p>
+              <div className="hero-btns show">
+                <Link to="/schedule" className="btn-white">Book Now</Link>
+                <Link to="/schedule" className="btn-glass">View Schedule</Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

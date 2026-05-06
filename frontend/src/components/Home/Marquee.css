@@ -1,0 +1,333 @@
+/* ── LEADERS SECTION ── */
+.leaders-section {
+  background: var(--primary);
+  padding: clamp(60px, 10vw, 120px) clamp(24px, 6vw, 128px);
+  overflow: hidden;
+  color: #fff;
+}
+
+.leaders-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.leaders-left {
+  flex: 0 0 35%;
+  max-width: 450px;
+}
+
+.speakers-eyebrow {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.leaders-h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 40px;
+}
+
+.leaders-cta-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 30px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.mic-icon {
+  font-size: 24px;
+  color: #fff;
+}
+
+.cta-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  max-width: 200px;
+}
+
+.pink-btn {
+  background: #ff007f; /* Matching the bright pink button */
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.pink-btn:hover {
+  background: #e60073;
+  transform: scale(1.05);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.leaders-right {
+  flex: 1;
+  min-width: 0; /* Important for flex children to allow overflow */
+  position: relative;
+  /* Gradient masks for smooth fade on edges */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.horizontal-marquee-track {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.horizontal-marquee-content {
+  display: inline-flex;
+  gap: 24px;
+  padding-right: 24px;
+}
+
+/* Duplicated items to make the animation seamless */
+.scroll-left {
+  animation: scrollLeft 30s linear infinite;
+}
+
+.scroll-right {
+  animation: scrollRight 30s linear infinite;
+}
+
+.horizontal-marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.leader-card {
+  position: relative;
+  width: 280px;
+  height: 380px;
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.leader-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.leader-card:hover .leader-bg {
+  transform: scale(1.08);
+}
+
+.leader-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  white-space: normal; /* allow text wrapping */
+}
+
+.leader-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.leader-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* ── REVIEW SECTION ── */
+.review-section {
+  background: #ffffff;
+  padding: clamp(80px, 12vw, 160px) 0;
+  overflow: hidden;
+}
+
+.review-inner {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.review-head {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 0 24px;
+}
+
+.review-h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.review-marquee-container {
+  width: 100%;
+  position: relative;
+  /* Gradient masks for smooth fade on edges */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.review-track {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.review-content {
+  display: inline-flex;
+  gap: 24px;
+  padding-right: 24px;
+}
+
+.review-content:hover {
+  animation-play-state: paused;
+}
+
+.review-card {
+  width: 400px;
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 32px;
+  flex-shrink: 0;
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  transition: box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* Vertical floating animation to satisfy "horizontally and vertically" */
+.float-up {
+  animation: floatUp 4s ease-in-out infinite alternate;
+}
+.float-down {
+  animation: floatDown 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(5px); }
+  to { transform: translateY(-10px); }
+}
+
+@keyframes floatDown {
+  from { transform: translateY(-5px); }
+  to { transform: translateY(10px); }
+}
+
+.quote-mark {
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  color: #ff007f;
+  line-height: 0;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  display: block;
+}
+
+.review-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.review-author img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.author-info p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .leaders-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .leaders-left {
+    max-width: 100%;
+    margin-bottom: 40px;
+  }
+}

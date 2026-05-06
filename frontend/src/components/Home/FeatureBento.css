@@ -1,0 +1,135 @@
+/* ── PARALLAX GALLERY ── */
+.features-section {
+  background: var(--primary) !important;
+  overflow: hidden;
+}
+
+.parallax-gallery-wrapper {
+  width: 100%;
+  height: clamp(500px, 80vh, 900px);
+  overflow: hidden;
+  position: relative;
+  border-radius: 24px;
+}
+
+/* Gradient overlays to fade out top and bottom */
+.parallax-gallery-wrapper::before,
+.parallax-gallery-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 15%;
+  z-index: 10;
+  pointer-events: none;
+}
+.parallax-gallery-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--primary) 0%, transparent 100%);
+}
+.parallax-gallery-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--primary) 0%, transparent 100%);
+}
+
+.parallax-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 24px);
+  height: 100%;
+  padding: 0;
+  transform: scale(1.05); /* Slight scale to hide empty edges */
+}
+
+/* Remove gap so we can control spacing perfectly for seamless loop */
+.parallax-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  will-change: transform;
+}
+
+/* Offset center column so it's staggered visually */
+.parallax-col.center-col {
+  margin-top: -150px;
+}
+
+.gallery-img-wrap {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  /* Instead of gap on parent, use padding-bottom here to ensure seamless math */
+  padding-bottom: clamp(16px, 2vw, 24px);
+  box-sizing: content-box;
+}
+
+.gallery-img-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.gallery-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.gallery-img-wrap:hover img {
+  transform: scale(1.05);
+}
+
+/* Animations for seamless scrolling */
+@keyframes scrollDown {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes scrollUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.parallax-col.scroll-down {
+  animation: scrollDown 25s linear infinite;
+}
+
+.parallax-col.scroll-up {
+  animation: scrollUp 25s linear infinite;
+}
+
+/* Pause on hover */
+.parallax-gallery:hover .parallax-col {
+  animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+  .parallax-gallery {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+    transform: none;
+  }
+  .parallax-col, .parallax-col.center-col {
+    margin-top: 0;
+    transform: none !important;
+    animation: none;
+  }
+  .parallax-gallery-wrapper {
+    height: auto;
+    overflow: visible;
+  }
+  .parallax-gallery-wrapper::before,
+  .parallax-gallery-wrapper::after {
+    display: none;
+  }
+  /* Show only one set of images on mobile */
+  .mobile-hide {
+    display: none;
+  }
+}

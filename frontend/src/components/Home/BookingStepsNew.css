@@ -1,0 +1,109 @@
+/* ── NEW BOOKING STEPS SECTION ── */
+.booking-new-section {
+  background: #ffffff;
+  padding: clamp(60px, 10vw, 120px) clamp(24px, 6vw, 128px);
+}
+
+.booking-new-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.booking-new-head {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.booking-col {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.booking-step-item {
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.booking-step-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.step-icon {
+  font-size: 32px;
+  color: #ff007f;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.step-title-new {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.step-desc-new {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.booking-center-col {
+  height: 100%;
+  min-height: 500px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.booking-center-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Correct the fonting in phone and display responsive layout */
+@media (max-width: 1024px) {
+  .booking-layout {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  .booking-center-col {
+    order: -1; /* Move image to top on mobile */
+    min-height: 350px;
+    height: 350px;
+  }
+
+  .booking-step-item {
+    text-align: center;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .step-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .step-title-new {
+    font-size: 1.25rem; /* Better font size for phone */
+  }
+  
+  .step-desc-new {
+    font-size: 0.95rem; /* Better readability on phone */
+  }
+}

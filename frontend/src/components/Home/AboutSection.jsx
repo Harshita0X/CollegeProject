@@ -1,10 +1,16 @@
 import React from 'react';
 
 const CHECKLIST = [
-  'Professional-grade security and reliability',
-  'Intuitive interface for all user levels',
-  'Comprehensive event management tools',
+  'Secure and reliable platform',
+  'Easy to use for everyone',
+  'Everything you need to manage events',
   'Real-time availability and instant confirmations',
+];
+
+const STATS = [
+  { label: 'Uptime', value: '99.9%' },
+  { label: 'Processing', value: 'Instant' },
+  { label: 'Security', value: 'SSL+' }
 ];
 
 const SPECS = [
@@ -22,12 +28,9 @@ export default function AboutSection({ aboutRef, aboutVisible }) {
         <div>
           <div className={`reveal ${aboutVisible ? 'in' : ''}`}>
             <span className="about-eyebrow">About the Platform</span>
-            <h2 className="about-h2">Excellence in Event<br />Management</h2>
+            <h2 className="about-h2">Smarter Event Management<br />Starts Here</h2>
             <p className="about-p">
-              Our auditorium booking platform represents the convergence of institutional excellence
-              and technological innovation. Designed specifically for academic and professional
-              environments, we provide a comprehensive solution that ensures seamless event
-              coordination and optimal facility utilization.
+              A smart auditorium booking platform built for colleges and professionals. Plan, manage, and execute events effortlessly—all in one place
             </p>
           </div>
           <ul className={`checklist reveal ${aboutVisible ? 'in delay-2' : ''}`}>
@@ -40,14 +43,21 @@ export default function AboutSection({ aboutRef, aboutVisible }) {
           </ul>
         </div>
 
-        <div className={`specs-card reveal ${aboutVisible ? 'in delay-1' : ''}`}>
-          <h3 className="specs-h3">Platform Specifications</h3>
-          {SPECS.map((row, i) => (
-            <div className="specs-row" key={i}>
-              <span className="specs-key">{row.k}</span>
-              <span className="specs-val">{row.v}</span>
-            </div>
-          ))}
+        <div className={`premium-specs reveal ${aboutVisible ? 'in delay-1' : ''}`}>
+          <div className="specs-top">
+            <h3 className="specs-h3">System Specifications</h3>
+            <span className="specs-badge">2026 Edition</span>
+          </div>
+          <div className="specs-content">
+            {SPECS.map((row, i) => (
+              <div className="specs-row-modern" key={i}>
+                <span className="specs-k">{row.k}</span>
+                <div className="specs-line" />
+                <span className="specs-v">{row.v}</span>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>
