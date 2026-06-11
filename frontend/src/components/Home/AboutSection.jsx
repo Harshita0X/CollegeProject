@@ -7,18 +7,11 @@ const CHECKLIST = [
   'Real-time availability and instant confirmations',
 ];
 
-const STATS = [
-  { label: 'Uptime', value: '99.9%' },
-  { label: 'Processing', value: 'Instant' },
-  { label: 'Security', value: 'SSL+' }
-];
-
 const SPECS = [
   { k: 'Capacity Range', v: '100 – 400 People' },
   { k: 'Availability', v: '24/7 Online Access' },
   { k: 'Notifications', v: 'Email & System Alerts' },
   { k: 'Approval SLA', v: 'Within 48 Hours' },
-  { k: 'AV Support', v: '4K · Dolby Audio · DMX' },
 ];
 
 export default function AboutSection({ aboutRef, aboutVisible }) {
@@ -30,9 +23,10 @@ export default function AboutSection({ aboutRef, aboutVisible }) {
             <span className="about-eyebrow">About the Platform</span>
             <h2 className="about-h2">Smarter Event Management<br />Starts Here</h2>
             <p className="about-p">
-              A smart auditorium booking platform built for colleges and professionals. Plan, manage, and execute events effortlessly—all in one place
+              A smart auditorium booking platform built for societies of MAIT,MAIMS and MABS. Plan, manage, and execute events effortlessly—all in one place
             </p>
           </div>
+
           <ul className={`checklist reveal ${aboutVisible ? 'in delay-2' : ''}`}>
             {CHECKLIST.map((txt, i) => (
               <li className="check-item" key={i}>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './FAQ.css';
 
 const FAQS = [
@@ -8,7 +9,7 @@ const FAQS = [
   },
   {
     q: 'Who can attend the event?',
-    a: 'The event is open to all MAIT students interested in technology, innovation, and Development.'
+    a: 'The event is open to all MAIT,MAIMS,MABS students interested in technology, innovation, and Development.'
   },
   {
     q: 'What can attendees expect from the event?',
@@ -20,7 +21,7 @@ const FAQS = [
   },
   {
     q: 'Is there any registration fee?',
-    a: 'No, participation is free for all registered MAIT,MAIMA,MABS Students.Event can decide their respective fees.'
+    a: 'No, participation is free for all registered MAIT,MAIMS,MABS Students.Event can decide their respective fees.'
   },
   {
     q: 'Who can organize events in mini auditorium?',
@@ -41,16 +42,16 @@ export default function FAQSection() {
         <div className="faq-left">
           <span className="faq-eyebrow">FAQ</span>
           <h2 className="faq-h2">
-            Your Questions,<br />
+            Your Questions<br />
             Answered
           </h2>
 
           <div className="faq-contact-card">
             <span className="material-symbols-outlined help-icon">help_outline</span>
             <p className="contact-text">If your question isn't listed here, reach out and we'll help.</p>
-            <button className="pink-btn">
+            <Link to="/contact" className="pink-btn">
               Contact Us <span className="material-symbols-outlined btn-icon">arrow_forward</span>
-            </button>
+            </Link>
           </div>
         </div>
 

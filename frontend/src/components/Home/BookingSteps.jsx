@@ -8,9 +8,8 @@ const STEPS_LEFT = [
 ];
 
 const STEPS_RIGHT = [
-  { icon: 'payments', title: '4. Secure Payments', desc: 'Complete venue booking payments securely through our portal.' },
-  { icon: 'settings', title: '5. Technical Setup', desc: 'Coordinate AV, lighting, and seating requirements beforehand.' },
-  { icon: 'celebration', title: '6. Event Execution', desc: 'Enjoy a seamless event experience with dedicated on-site support.' },
+  { icon: 'settings', title: '4. Technical Setup', desc: 'Coordinate AV, lighting, and seating requirements beforehand.' },
+  { icon: 'celebration', title: '5. Event Execution', desc: 'Enjoy a seamless event experience with no obstructions.' },
 ];
 
 export default function BookingSteps({ stepsRef, stepsVisible }) {

@@ -3,9 +3,7 @@ import React from 'react';
 const STEPS = [
   { id: 1, label: "Event Details" },
   { id: 2, label: "Schedule" },
-  { id: 3, label: "Facilities" },
-  { id: 4, label: "Contact" },
-  { id: 5, label: "Review" },
+  { id: 3, label: "Review" },
 ];
 
 export default function StepIndicator({ currentStep }) {

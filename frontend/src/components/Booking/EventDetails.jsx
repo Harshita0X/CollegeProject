@@ -2,7 +2,7 @@ import React from 'react';
 import { FormField } from './Shared';
 
 export default function EventDetails({ data, errors, onChange }) {
-  const pctSlider = Math.round((data.attendance - 50) / (850 - 50) * 100);
+  const pctSlider = Math.round((data.attendance - 50) / (450 - 50) * 100);
 
   return (
     <div className="bp-fade">
@@ -17,7 +17,7 @@ export default function EventDetails({ data, errors, onChange }) {
               className={errors.title ? "err" : data.title ? "ok" : ""} 
               value={data.title} 
               onChange={e => onChange("title", e.target.value)} 
-              placeholder="e.g. Annual Technical Symposium" 
+              placeholder="e.g. Annual Technical Event" 
             />
           </FormField>
           
@@ -50,7 +50,7 @@ export default function EventDetails({ data, errors, onChange }) {
                   type="range" 
                   className="bp-att-slider" 
                   min={50} 
-                  max={850} 
+                  max={450} 
                   step={25} 
                   value={data.attendance}
                   style={{ "--pct": pctSlider + "%" }}
@@ -63,16 +63,16 @@ export default function EventDetails({ data, errors, onChange }) {
                   className="bp-cap-fill" 
                   style={{ 
                     width: pctSlider + "%", 
-                    background: data.attendance > 700 ? "#ef4444" : data.attendance > 500 ? "#f59e0b" : "#16a34a" 
+                    background: data.attendance > 450? "#ef4444" : data.attendance > 250 ? "#f59e0b" : "#16a34a" 
                   }} 
                 />
               </div>
               <div className="bp-cap-labels">
                 <span>50 min</span>
-                <span style={{ color: data.attendance > 700 ? "#dc2626" : data.attendance > 500 ? "#d97706" : "var(--slate)" }}>
+                <span style={{ color: data.attendance > 450 ? "#dc2626" : data.attendance > 250 ? "#d97706" : "var(--slate)" }}>
                   {pctSlider}% of capacity
                 </span>
-                <span>850 max</span>
+                <span>450 max</span>
               </div>
             </div>
           </FormField>

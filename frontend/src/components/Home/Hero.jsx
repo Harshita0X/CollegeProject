@@ -42,17 +42,15 @@ export default function Hero() {
     <section className="hero-modern">
       <div className="hero-container">
         {/* Stadium Image Vessel */}
-        <div className="hero-stadium-wrap show">
-          <div className="hero-stadium-vessel">
+          <div className="hero-full-slider">
             {IMAGES.map((src, index) => (
-              <img
-                key={src}
-                src={src}
-                alt={`MAIT Auditorium ${index + 1}`}
-                className={`hero-stadium-img parallax-bg ${index === imgIndex ? 'active' : ''}`}
-              />
+              <div 
+                key={src} 
+                className={`hero-slide ${index === imgIndex ? 'active' : ''}`}
+                style={{ backgroundImage: `url('/${src}')` }}
+              ></div>
             ))}
-            <div className="hero-stadium-overlay" />
+            <div className="hero-slider-overlay" />
 
             {/* Overlay Content */}
             <div className="hero-overlay-content">
@@ -72,8 +70,18 @@ export default function Hero() {
                 <Link to="/schedule" className="btn-glass">View Schedule</Link>
               </div>
             </div>
+
+            {/* Pagination Dots */}
+            <div className="hero-dots">
+              {IMAGES.map((_, index) => (
+                <button
+                  key={index}
+                  className={`hero-dot ${index === imgIndex ? 'active' : ''}`}
+                  onClick={() => setImgIndex(index)}
+                ></button>
+              ))}
+            </div>
           </div>
-        </div>
       </div>
     </section>
   );

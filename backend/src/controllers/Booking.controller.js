@@ -1,4 +1,6 @@
 import Booking from '../models/Booking.model.js';
+import Notification from '../models/Notification.model.js';
+import User from '../models/User.model.js';
 
 export const requestBooking = async (req, res) => {
     try {
@@ -37,6 +39,19 @@ export const requestBooking = async (req, res) => {
         });
 
         await newBooking.save();
+
+        // Notify Admin
+        const adminUser = await User.findOne({ role: 'admin' });
+        if (adminUser) {
+            await Notification.create({
+                recipientId: adminUser._id,
+                title: 'New Booking Request',
+                message: `${name || 'A user'} has requested to book the auditorium on ${date}.`,
+                type: 'admin_reminder',
+                bookingId: newBooking._id
+            });
+        }
+
         res.status(201).json({ success: true, message: 'Booking request submitted successfully', data: newBooking });
 
     } catch (error) {
@@ -66,6 +81,55 @@ export const getMyBookings = async (req, res) => {
         res.status(200).json({ success: true, data: bookings });
     } catch (error) {
         console.error('Error in getMyBookings:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+export const getAllPendingBookings = async (req, res) => {
+    try {
+        // Find all bookings where status is 'pending' and populate the user details
+        const bookings = await Booking.find({ status: 'pending' })
+            .populate('user', 'name email rollNo')
+            .sort({ createdAt: -1 }); // Newest first
+
+        res.status(200).json({ success: true, data: bookings });
+    } catch (error) {
+        console.error('Error in getAllPendingBookings:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+export const updateBookingStatus = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the booking ID from the URL
+        const { status } = req.body; // Get the new status ('approved' or 'rejected') from the request
+
+        if (!['approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+
+        const updatedBooking = await Booking.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true } // Returns the updated document
+        );
+
+        if (!updatedBooking) {
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+        }
+
+        // Notify User
+        await Notification.create({
+            recipientId: updatedBooking.user,
+            title: `Booking ${status.charAt(0).toUpperCase() + status.slice(1)}`,
+            message: `Your booking for ${updatedBooking.eventTitle} on ${updatedBooking.date} has been ${status}.`,
+            type: 'booking_alert',
+            bookingId: updatedBooking._id
+        });
+
+        res.status(200).json({ success: true, message: `Booking ${status} successfully`, data: updatedBooking });
+    } catch (error) {
+        console.error('Error in updateBookingStatus:', error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };

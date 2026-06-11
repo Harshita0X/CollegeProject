@@ -10,7 +10,7 @@ const TIME_SLOTS = [
   { id: "1500", label: "3:00 PM" },
   { id: "1600", label: "4:00 PM" },
 ];
-export default function SchedulePicker({ data, errors, onChange }) {
+export default function SchedulePicker({ data, errors, onChange, isDateLocked }) {
   const [busy, setBusy] = useState([]);
   const [loading, setLoading] = useState(false);
   const todayStr = new Date().toISOString().split("T")[0];
@@ -41,15 +41,31 @@ export default function SchedulePicker({ data, errors, onChange }) {
         <div className="bp-sec-sub">Pick your preferred date and time slot. Greyed slots are already booked.</div>
         
         <div className="bp-grid2">
-          <FormField label="Preferred Date" error={errors.date}>
-            <input 
-              type="date" 
-              className={errors.date ? "err" : data.date ? "ok" : ""} 
-              value={data.date} 
-              min={todayStr} 
-              onChange={e => onChange("date", e.target.value)} 
-            />
-          </FormField>
+          {isDateLocked ? (
+            <FormField label="Selected Date">
+              <div style={{ 
+                padding: "12px 16px", 
+                background: "#f8fafc", 
+                border: "1px solid #e2e8f0", 
+                borderRadius: "8px", 
+                color: "#334155", 
+                fontWeight: 600,
+                fontSize: "15px"
+              }}>
+                {new Date(data.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </div>
+            </FormField>
+          ) : (
+            <FormField label="Preferred Date" error={errors.date}>
+              <input 
+                type="date" 
+                className={errors.date ? "err" : data.date ? "ok" : ""} 
+                value={data.date} 
+                min={todayStr} 
+                onChange={e => onChange("date", e.target.value)} 
+              />
+            </FormField>
+          )}
           
           <FormField label="Duration (Hours)" error={errors.duration} hint="Maximum 8 hours per session">
             <input 

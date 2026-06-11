@@ -6,10 +6,9 @@ import Sidebar from '../components/Booking/Sidebar';
 import StepIndicator from '../components/Booking/StepIndicator';
 import EventDetails from '../components/Booking/EventDetails';
 import SchedulePicker from '../components/Booking/SchedulePicker';
-import FacilitySelector from '../components/Booking/FacilitySelector';
-import ContactInfo from '../components/Booking/ContactInfo';
 import ReviewBooking from '../components/Booking/ReviewBooking';
 import SuccessState from '../components/Booking/SuccessState';
+import useAuthStore from '../store/useAuthStore';
 
 // Utils
 import { validateBookingStep } from '../utils/validation';
@@ -32,9 +31,16 @@ const INITIAL_DATA = {
   notes: "",
 };
 
-export default function BookingPortal({ onCancel = () => {} }) {
+export default function BookingPortal({ initialDate, onCancel = () => {} }) {
+  const user = useAuthStore((state) => state.user);
+  
   const [step, setStep] = useState(1);
-  const [data, setData] = useState(INITIAL_DATA);
+  const [data, setData] = useState({
+    ...INITIAL_DATA,
+    date: initialDate || "",
+    name: user?.name || "",
+    email: user?.email || "",
+  });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -80,7 +86,7 @@ export default function BookingPortal({ onCancel = () => {} }) {
     }
   };
 
-  const pct = Math.round(((step - 1) / 5) * 100);
+  const pct = Math.round(((step - 1) / 3) * 100);
 
   if (done) {
     return <SuccessState email={data.email} onCancel={onCancel} />;
@@ -89,10 +95,8 @@ export default function BookingPortal({ onCancel = () => {} }) {
   const renderStep = () => {
     switch (step) {
       case 1: return <EventDetails data={data} errors={errors} onChange={updateData} />;
-      case 2: return <SchedulePicker data={data} errors={errors} onChange={updateData} />;
-      case 3: return <FacilitySelector selected={data.facilities} onChange={val => updateData("facilities", val)} error={errors.facilities} />;
-      case 4: return <ContactInfo data={data} errors={errors} onChange={updateData} />;
-      case 5: return <ReviewBooking data={data} />;
+      case 2: return <SchedulePicker data={data} errors={errors} onChange={updateData} isDateLocked={!!initialDate} />;
+      case 3: return <ReviewBooking data={data} />;
       default: return null;
     }
   };
@@ -127,7 +131,7 @@ export default function BookingPortal({ onCancel = () => {} }) {
             
             <button 
               className="bp-btn bp-btn-primary" 
-              onClick={step === 5 ? handleSubmit : nextStep}
+              onClick={step === 3 ? handleSubmit : nextStep}
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -136,7 +140,7 @@ export default function BookingPortal({ onCancel = () => {} }) {
                   Processing...
                 </span>
               ) : (
-                step === 5 ? "Confirm & Submit" : "Continue"
+                step === 3 ? "Confirm & Submit" : "Continue"
               )}
             </button>
           </div>

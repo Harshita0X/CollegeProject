@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Scheduling.css';
 import BookingPortal from './BookingPortal';
 
@@ -106,7 +106,7 @@ export default function Scheduling() {
 
   const handleBookingSubmit = (data) => {
     const date = data.date;
-    const tl = ["9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM", "4:00 PM"][["0900", "1000", "1100", "1400", "1500", "1600"].indexOf(data.startTime)] || '—';
+    const tl = ["9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM"][["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].indexOf(data.startTime)] || '—';
     
     const startHour = parseInt(data.startTime.substring(0, 2));
     const endHour = startHour + parseInt(data.duration);
@@ -168,9 +168,8 @@ export default function Scheduling() {
         <div className="calendar-section">
           <div className="section-header">
             <div>
-              <div className="label">Institutional Resource</div>
               <h1>Auditorium Schedule</h1>
-              <p>Manage and view availability for the main block auditorium. Requests require departmental head approval.</p>
+              <p>Manage and view availability for the main block auditorium. </p>
             </div>
             <div className="month-nav">
               <button className="arrow-btn" onClick={() => changeMonth(-1)}>
@@ -277,7 +276,7 @@ export default function Scheduling() {
                   </div>
                   <div style={{ marginTop: "14px", padding: "12px", background: "var(--surface-low)", borderRadius: "8px", fontSize: "0.78rem", color: "var(--on-surface-var)", lineHeight: 1.5 }}>
                     <strong style={{ display: "block", fontFamily: "'Syne',sans-serif", fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "4px" }}>Capacity</strong>
-                    Max 1000 seating · Full AV Setup · Air-conditioned<br />Stage + Green Room included
+                    Max 450 seating · Fully Air-conditioned<br />Stage + chairs setup included.
                   </div>
                 </>
               ) : (
@@ -297,7 +296,7 @@ export default function Scheduling() {
 
           <div className="notice-card">
             <span className="material-symbols-outlined">info</span>
-            <p><strong>Booking Policy</strong> Requests must be submitted 7 days in advance. Approvals require HOD signature and Dean confirmation.</p>
+            <p><strong>Booking Policy</strong> Requests must be submitted 7 days in advance.</p>
           </div>
         </div>
       </main>
@@ -311,19 +310,6 @@ export default function Scheduling() {
           />
         </div>
       )}
-
-      <footer>
-        <div className="footer-inner">
-          <div className="footer-brand">MAIT</div>
-          <div className="footer-links">
-            <a href="#">Contact Us</a>
-            <a href="#">University Policy</a>
-            <a href="#">Technical Support</a>
-            <a href="#">Privacy</a>
-          </div>
-          <div className="footer-copy">© 2025 Maharaja Agrasen Institute of Technology. All Rights Reserved.</div>
-        </div>
-      </footer>
     </div>
   );
 }

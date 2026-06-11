@@ -1,0 +1,288 @@
+/* Dashboard Shared Styles */
+
+.db-page {
+  min-height: 100vh;
+  background: #f4f6f9;
+}
+
+/* ── Hero Banner ── */
+.db-hero {
+  height: 180px;
+  background: linear-gradient(135deg, #001e40 0%, #003070 60%, #001228 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.db-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(181,32,64,0.25), transparent 70%);
+  border-radius: 50%;
+}
+
+/* ── Profile Card ── */
+.db-profile-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.db-profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,30,64,0.08);
+  padding: 28px 36px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.db-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 14px;
+  background: #e8ecf1;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(0,30,64,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.db-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.db-avatar-icon {
+  font-size: 52px;
+  color: #94a3b8;
+}
+
+.db-profile-info {
+  flex: 1;
+}
+
+.db-profile-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #001e40;
+  letter-spacing: -0.03em;
+  margin: 0 0 4px 0;
+}
+
+.db-profile-table {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 4px 12px;
+  margin-top: 10px;
+}
+
+.db-profile-key {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #001e40;
+}
+
+.db-profile-val {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.db-role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.db-role-badge.admin   { background: #fee2e2; color: #b91c1c; }
+.db-role-badge.student { background: #dbeafe; color: #1d4ed8; }
+.db-role-badge.faculty { background: #d1fae5; color: #065f46; }
+
+/* ── Main content area ── */
+.db-content {
+  max-width: 1100px;
+  margin: 32px auto 60px auto;
+  padding: 0 40px;
+}
+
+.db-section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #001e40;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e8ecf1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.db-section-title .material-symbols-outlined {
+  font-size: 20px;
+  color: #ec4899;
+}
+
+/* ── Booking Cards ── */
+.db-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.db-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0,30,64,0.04);
+  padding: 22px 24px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.db-card:hover {
+  box-shadow: 0 8px 30px rgba(0,30,64,0.10);
+  transform: translateY(-2px);
+}
+
+.db-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.db-card-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #001e40;
+  letter-spacing: -0.02em;
+}
+
+.db-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.db-badge.pending  { background: #fef3c7; color: #92400e; }
+.db-badge.approved { background: #d1fae5; color: #065f46; }
+.db-badge.rejected { background: #fee2e2; color: #b91c1c; }
+
+.db-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.db-row-label {
+  font-weight: 700;
+  color: #001e40;
+  min-width: 80px;
+  font-family: 'Inter', sans-serif;
+}
+
+.db-row-val {
+  color: #475569;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.db-divider {
+  border: none;
+  border-top: 1px solid #f1f5f9;
+  margin: 14px 0;
+}
+
+.db-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.db-btn {
+  flex: 1;
+  padding: 9px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.db-btn.approve {
+  background: #001e40;
+  color: white;
+}
+.db-btn.approve:hover { background: #003070; }
+
+.db-btn.reject {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+.db-btn.reject:hover { background: #fecaca; }
+
+/* ── Empty state ── */
+.db-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px dashed #cbd5e1;
+}
+
+.db-empty .material-symbols-outlined {
+  font-size: 48px;
+  color: #cbd5e1;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.db-empty p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ── Loading ── */
+.db-loading {
+  text-align: center;
+  padding: 80px;
+  font-family: 'Inter', sans-serif;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .db-profile-wrap, .db-content { padding: 0 16px; }
+  .db-profile-card { flex-direction: column; align-items: flex-start; }
+  .db-cards { grid-template-columns: 1fr; }
+}

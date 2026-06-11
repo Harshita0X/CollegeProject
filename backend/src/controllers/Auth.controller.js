@@ -7,7 +7,8 @@ dotenv.config();
 
 export const Signup = async (req, resp) => {
     try {
-        const { name, email, password, role } = req.body;
+        let { name, email, password, role } = req.body;
+        if (email) email = email.trim().toLowerCase();
 
         // Verifying
 
@@ -43,7 +44,7 @@ export const Signup = async (req, resp) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const normalizedRole = role?.toLowerCase?.() || 'student';
-        if (!['student', 'faculty'].includes(normalizedRole)) {
+        if (!['student', 'faculty', 'admin'].includes(normalizedRole)) {
             return resp.status(400).json({
                 success: false,
                 message: 'Invalid role selected for signup'
@@ -84,7 +85,8 @@ export const Signup = async (req, resp) => {
 
 export const Login = async (req, resp) => {
     try {
-        const { email, password, role } = req.body;
+        let { email, password, role } = req.body;
+        if (email) email = email.trim().toLowerCase();
 
         if (!email || !password) {
             return resp.status(400).json({
@@ -114,7 +116,7 @@ export const Login = async (req, resp) => {
         }
 
         const normalizedRole = role?.toLowerCase?.();
-        if (normalizedRole && !['student', 'faculty'].includes(normalizedRole)) {
+        if (normalizedRole && !['student', 'faculty', 'admin'].includes(normalizedRole)) {
             return resp.status(400).json({
                 success: false,
                 message: 'Invalid role provided'
@@ -123,12 +125,9 @@ export const Login = async (req, resp) => {
 
         const effectiveRole = findUser.role || (findUser.rollNo ? 'student' : 'faculty');
 
-        if (normalizedRole && effectiveRole !== normalizedRole) {
-            return resp.status(403).json({
-                success: false,
-                message: `This account is not registered as ${normalizedRole}`
-            });
-        }
+        // We completely remove the mismatch check here so the Admin can log in secretly.
+        // Even if they click "Student" or "Faculty" on the frontend, if their database role is 'admin',
+        // they will be granted admin access automatically!
 
         // Generating token
         generateToken(findUser._id, resp);
