@@ -33,23 +33,5 @@ export const validateBookingStep = (step, data) => {
     }
   }
   
-  if (step === 3) {
-    if (data.facilities.length === 0) errors.facilities = "Select at least one facility";
-  }
-  
-  if (step === 4) {
-    if (!data.name.trim()) errors.name = "Full name is required";
-    
-    if (!data.email.trim()) errors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      errors.email = "Enter a valid email address";
-    }
-    
-    if (!data.phone.trim()) errors.phone = "Phone number is required";
-    else if (!/^\+?[\d\s\-()]{8,}$/.test(data.phone)) {
-      errors.phone = "Enter a valid phone number";
-    }
-  }
-  
   return errors;
 };

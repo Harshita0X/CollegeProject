@@ -1,73 +1,84 @@
 import { create } from 'zustand'
-import api from '../services/api'
 
 const useAuthStore = create((set) => ({
   user: null,
+  token: null,
   isAuthenticated: false,
-  isCheckingAuth: false,
   isLoading: false,
   error: null,
+
+  setUser: (user) => set({ user }),
+  setToken: (token) => set({ token }),
 
   clearError: () => set({ error: null }),
 
   login: async ({ email, password, role }) => {
-    set({ isLoading: true, error: null })
-
+    set({ isLoading: true, error: null });
     try {
-      const response = await api.post('/auth/login', { email, password, role })
-      const user = response?.data?.data ?? null
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, role }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        set({ isLoading: false, error: data.message || 'Login failed' });
+        return { success: false };
+      }
 
       set({
-        user,
-        isAuthenticated: Boolean(user),
+        user: data.data,
+        token: data.token || null,
+        isAuthenticated: true,
         isLoading: false,
-      })
+        error: null,
+      });
+      return { success: true };
 
-      return { success: true }
-    } catch (error) {
-      const message = error?.response?.data?.message || 'Unable to login right now.'
-      set({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: message,
-      })
-      return { success: false, error: message }
+    } catch (err) {
+      set({ isLoading: false, error: 'Network error. Is the server running?' });
+      return { success: false };
     }
   },
 
-  checkAuth: async () => {
-    set({ isCheckingAuth: true, error: null })
+  signup: async ({ name, email, password, role }) => {
+    set({ isLoading: true, error: null });
     try {
-      const response = await api.get('/auth/check')
-      const user = response?.data?.data ?? null
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name, email, password, role }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        set({ isLoading: false, error: data.message || 'Signup failed' });
+        return { success: false };
+      }
+
       set({
-        user,
-        isAuthenticated: Boolean(user),
-        isCheckingAuth: false,
-      })
-    } catch (_) {
-      set({
-        user: null,
-        isAuthenticated: false,
-        isCheckingAuth: false,
-      })
+        user: data.data,
+        token: data.token || null,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+      return { success: true };
+
+    } catch (err) {
+      set({ isLoading: false, error: 'Network error. Is the server running?' });
+      return { success: false };
     }
   },
 
-  logout: async () => {
-    set({ isLoading: true, error: null })
-    try {
-      await api.post('/auth/logout')
-    } catch (_) {
-      // Even if API fails, clear local auth state to avoid stale sessions.
-    } finally {
-      set({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-      })
-    }
+  logout: () => {
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+    set({ user: null, token: null, isAuthenticated: false, error: null });
   },
 }))
 

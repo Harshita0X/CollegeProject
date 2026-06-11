@@ -25,14 +25,7 @@ export const protectedRoute = async (req, resp, next) => {
 
 
         // Now we have fully decoced token
-        const checkForUser = await User.findById(tokenDecoded.userId)
-            .populate("coreTribe")
-            .populate({
-                path: "vibingWith",
-                populate: {
-                    path: "activeWingmanFor"
-                }
-            });
+        const checkForUser = await User.findById(tokenDecoded.userId);
 
         if (!checkForUser) {
             return resp.status(404).json({
@@ -55,3 +48,15 @@ export const protectedRoute = async (req, resp, next) => {
 
     }
 }
+
+export const isAdmin = (req, resp, next) => {
+    // We already have req.user from the protectedRoute middleware
+    if (req.user && req.user.role === 'admin') {
+        next(); // Let them pass
+    } else {
+        return resp.status(403).json({
+            success: false,
+            message: 'Access denied. Admin resources only.'
+        });
+    }
+};

@@ -1,0 +1,222 @@
+/* About.css */
+
+.about-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  background-image: url('/mait_pic_2.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.about-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  z-index: 0;
+}
+
+.about-container > section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero */
+.about-hero {
+  position: relative;
+  height: 50vh;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #001e40 0%, #700070 60%, #001228 100%);
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  padding: 0 24px;
+}
+
+.about-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.about-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards 0.2s;
+}
+
+/* Stats */
+.about-stats-section {
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 60px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 40px 20px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px);
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary, #001e40);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Content */
+.about-content-section {
+  margin-bottom: 80px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.content-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-height: 350px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.content-card:hover {
+  transform: scale(1.03);
+}
+
+.card-overlay {
+  display: none;
+}
+
+.card-content-inner {
+  position: relative;
+  z-index: 2;
+  padding: 50px;
+  color: white;
+}
+
+.content-card h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #001e40;
+  margin-bottom: 16px;
+}
+
+.content-card p {
+  font-family: 'Inter', sans-serif;
+  color: #334155;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Spotlight */
+.spotlight-container {
+  display: flex;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 30, 64, 0.06);
+}
+
+.spotlight-image {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  min-height: 400px;
+  transition: transform 0.6s ease;
+}
+
+.spotlight-container:hover .spotlight-image {
+  transform: scale(1.05);
+}
+
+.spotlight-text {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.spotlight-text h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #001e40;
+  margin-bottom: 24px;
+}
+
+.spotlight-text p {
+  font-family: 'Inter', sans-serif;
+  color: #475569;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .content-grid { grid-template-columns: 1fr; }
+  .spotlight-container { flex-direction: column; }
+  .spotlight-image { min-height: 300px; }
+  .about-title { font-size: 3rem; }
+}
+
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .about-stats-section { margin-top: 40px; }
+  .about-title { font-size: 2.5rem; }
+}

@@ -1,13 +1,7 @@
 import React from 'react';
 import { TIME_SLOTS } from './SchedulePicker';
-import { FACILITIES } from './FacilitySelector';
-
 export default function ReviewBooking({ data }) {
   const startTimeLabel = TIME_SLOTS.find(t => t.id === data.startTime)?.label || "—";
-  const selectedFacilities = data.facilities
-    .map(id => FACILITIES.find(f => f.id === id)?.name)
-    .filter(Boolean)
-    .join(", ") || "None";
 
   const reviewItems = [
     ["Event Title", data.title || "—"],
@@ -17,11 +11,6 @@ export default function ReviewBooking({ data }) {
     ["Date", data.date ? new Date(data.date).toLocaleDateString("en-IN", { weekday: "short", year: "numeric", month: "long", day: "numeric" }) : "—"],
     ["Start Time", startTimeLabel],
     ["Duration", data.duration ? `${data.duration} hour${data.duration > 1 ? "s" : ""}` : "—"],
-    ["Facilities", selectedFacilities],
-    ["Contact Name", data.name || "—"],
-    ["Email", data.email || "—"],
-    ["Phone", data.phone || "—"],
-    ["Designation", data.designation],
   ];
 
   return (

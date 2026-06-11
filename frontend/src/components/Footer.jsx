@@ -8,7 +8,8 @@ export default function Footer() {
         <div className="footer-top">
           {/* Brand & Description */}
           <div className="footer-brand">
-            <h3>Maharaja Agrasen Institute of Technology</h3>
+            <h3>Maharaja   Agrasen   Institute   of   Technology</h3>
+            <p>Maharaja Agrasen Institute of Technology was established in 1999 by Maharaja Agrasen Technical Education Society promoted by a group of well known Industrialists, Businessman, Professionals and Philanthropists with an aim to promote quality education in the field of Technology and Management</p>
 
             {/* Social Icons */}
             <div className="social-icons">

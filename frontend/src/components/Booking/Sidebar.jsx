@@ -10,7 +10,7 @@ export default function Sidebar({ pct }) {
             <rect x="7" y="12" width="6" height="6" fill="rgba(255,255,255,0.25)" />
           </svg>
         </div>
-        <span className="bp-logo-text">MAIT Curator</span>
+        <span className="bp-logo-text">MAIT </span>
       </div>
 
       <div>
@@ -38,7 +38,7 @@ export default function Sidebar({ pct }) {
                   fill="rgba(255,255,255,0.4)"
                 />
               </svg>
-              Main Campus, Block A
+              Main Campus, Block 11
             </div>
           </div>
           <div className="bp-status-pill">
@@ -48,16 +48,9 @@ export default function Sidebar({ pct }) {
         </div>
         <div className="bp-venue-stat">
           <span className="bp-venue-stat-label">Capacity</span>
-          <span className="bp-venue-stat-val">850 Seats</span>
+          <span className="bp-venue-stat-val">100+ Seats</span>
         </div>
-        <div className="bp-venue-stat">
-          <span className="bp-venue-stat-label">Acoustics</span>
-          <span className="bp-venue-stat-val">Professional Grade</span>
-        </div>
-        <div className="bp-venue-stat">
-          <span className="bp-venue-stat-label">A/V System</span>
-          <span className="bp-venue-stat-val">4K Laser + Dolby</span>
-        </div>
+        
       </div>
 
       <div className="bp-progress-wrap">

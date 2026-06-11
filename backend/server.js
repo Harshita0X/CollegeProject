@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import { dbConnect } from './src/config/db.js'
 import authRoutes from './src/routes/Auth.route.js'
 import bookingRoutes from './src/routes/Booking.route.js'
+import notificationRoutes from './src/routes/Notification.route.js'
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.use(cors({
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/notifications', notificationRoutes)
 
 app.get('/', (req, res) => res.send('API Running ✅'))
 
